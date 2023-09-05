@@ -4,6 +4,8 @@ import { JwtModule } from "@nestjs/jwt";
 import { Module } from "@nestjs/common";
 import { AuthModule } from "./auth/auth.module";
 import { UserEnt } from "./entities/user.entity";
+// import { ConfigModule } from "@nestjs/config";
+import { ConfigService, ConfigModule } from "nestjs-config";
 
 @Module ({
     imports: [
@@ -21,6 +23,7 @@ import { UserEnt } from "./entities/user.entity";
         UsersModule,
         JwtModule,
         AuthModule
+        // ConfigModule.load(path.resolve(__dirname, 'config', '*.{ts,js}'))
     ]
 })
 
