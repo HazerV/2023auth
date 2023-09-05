@@ -19,12 +19,10 @@ import { AuthGuard } from "./auth.guards";
       signOptions: { expiresIn: '60s'},
     }),
   ],
-  providers: [AuthService, {
-    provide: APP_GUARD,
-    useClass: AuthGuard
-  }
-],
+  providers: [AuthService],
   controllers: [AuthController],
   exports: [AuthService], 
 })
 export class AuthModule {}
+
+// https://leetcode.com/
