@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcrypt'
 import { ConfigService } from '@nestjs/config';
 import { InjectConfig } from 'nestjs-config';
+import { error } from 'console';
 
 export type User = any;
 
@@ -18,10 +19,6 @@ export class UsersService {
     @InjectConfig() private readonly config: ConfigService) {
       this.saltRounds = config.get("app.salt_rounds", 10)
     }
-    
-    // async findById(userId: number): Promise<UserEnt | null> {
-    //   return await this.usersRep.findOneOrFail(userId)
-    // }
 
     async getHash(password: string): Promise<string> {
       return await bcrypt.hash(password, this.saltRounds)
@@ -45,21 +42,29 @@ export class UsersService {
       return await this.usersRep.find();
     }
 
-    // async findOne(username: string, password: string): Promise<User | undefined> {
-    //   try {
-    //     const user = await this.usersRep.findOne({
-    //       where: { username },
-    //     })
-    //     const isMatch = await bcrypt.compare(password, user.password)
-    //     if (user && isMatch) {
-    //       return user;
-    //     } else {
-    //       throw new Error('This user not found')
-    //     }
-    //   } catch e(err) {
-    //     throw new Error('Error finding ${err} user ${err.message}')
-    //   }
+    async findOne(username: string, password: string): Promise<User | undefined> {
+      try {
+        const user = await this.usersRep.findOne({
+          where: { username },
+        })
+        const isMatch = await bcrypt.compare(password, user.password)
+        if (user && isMatch) {
+          return user;
+        } else {
+          throw new Error('This user not found')
+        }
+      } catch (err) {
+        throw new Error('Error finding ${err} user ${err.message}')
+      }
+    }
+
+    // async findOne(userId: number): Promise <UserEnt> {
+    //   return this.usersRep.findOne(userId)
     // }
+
+    async findById(userId: number): Promise<UserEnt | null> {
+      return await this.usersRep.findOneOrFail(userId)
+    }
 
     async createUsr(user: UserEnt): Promise<UserEnt> {
       const create = {
